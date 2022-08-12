@@ -9,17 +9,18 @@ int main()
     CURL* curl;
     CURLcode response;
     std::string result;
-    std::string fields = "{\"username\": \"praisecodes\", \"password\": \"Praise@042\"}";
+    std::string fields = "{\"username\": \"raisecodes\", \"password\": \"Praise\"}";
 
-    struct curl_slist* hs = NULL;
+    struct curl_slist *hs = NULL;
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
     curl = curl_easy_init();
 
     if (curl) {
-        hs = curl_slist_append(hs, "Content-Type: application/json");
         curl_easy_setopt(curl, CURLOPT_URL, "https://practiceapii.herokuapp.com/login.php");
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        hs = curl_slist_append(hs, "Content-Type: application/json");
+        hs = curl_slist_append(hs, "Cache-Control: no-cache");
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hs);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, fields);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &result);
@@ -30,7 +31,7 @@ int main()
             std::cerr << "Request Failed: " << curl_easy_strerror(response) << std::endl;
         }
         else {
-            std::cout << result << std::endl;
+            std::cout << result << fields << std::endl;
         }
     }
     return 0;
