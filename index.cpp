@@ -1,5 +1,3 @@
-// CurlTest.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
 #define CURL_STATICLIB
 #include <iostream>
 #include "curl/curl.h"
@@ -11,13 +9,19 @@ int main()
     CURL* curl;
     CURLcode response;
     std::string result;
+    std::string fields = "{\"username\": \"praisecodes\", \"password\": \"Praise@042\"}";
+
+    struct curl_slist* hs = NULL;
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
     curl = curl_easy_init();
 
     if (curl) {
+        hs = curl_slist_append(hs, "Content-Type: application/json");
         curl_easy_setopt(curl, CURLOPT_URL, "https://practiceapii.herokuapp.com/login.php");
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hs);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, fields);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &result);
 
         response = curl_easy_perform(curl);
@@ -37,13 +41,3 @@ static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* use
     return (size * nmemb);
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
